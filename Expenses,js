@@ -1,0 +1,64 @@
+import React,{useState,useEffect} from 'react'
+import { TextField } from '@fluentui/react/lib/TextField';
+import { PrimaryButton } from '@fluentui/react/lib/Button';
+import { Calendar, defaultCalendarStrings } from '@fluentui/react';
+import './style.css';
+
+const Expenses = () => {
+const [textdata , setTextdata] = useState("");
+const[textitems ,setTextItems] = useState([]);
+const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+// adding the items one by one 
+
+const additem = () =>{
+   
+  if(!textdata){
+    alert('Plz add the expenses');
+  }
+  else if(!selectedDate){
+    alert('Plz add the date');
+  }
+  else{
+    setTextItems([...textitems,textdata,selectedDate]);
+     setTextdata("");
+     setSelectedDate();
+  }
+}
+// adding the data in local storage
+
+ useEffect(() =>{
+  
+ localStorage.setTextItems( "mylist",JSON.stringify(textitems))
+
+ },[textitems]);
+
+console.log(textitems);
+
+    return (
+      <>
+      <h1 className='heading'> Employee Expenses</h1>
+       <div className='edit'>Expenses in Rupyee:-<TextField className='text' placeholder='💲' type='number'  value ={textdata} onChange={(e)=>setTextdata(e.target.value)}/></div>
+      
+        <div style={{ height: '360px'}} className='calendar'>
+    Choose Date:-
+     {/* <div>Selected date: {selectedDate?.toLocaleString() || 'Not set'}</div> */}
+     <Calendar 
+       showGoToToday
+       onSelectDate={setSelectedDate}
+      
+       // Calendar uses English strings by default. For localized apps, you must override this prop.
+       strings={defaultCalendarStrings}
+       // minDate={minDate}
+       // maxDate={maxDate}
+       value ={selectedDate} onChange={(e)=>setSelectedDate(e.target.value)}
+     />
+    <div>Selected date: {selectedDate?.toLocaleString() || 'Not set'}</div>
+   </div>
+   <div className='button'><PrimaryButton text="Standard" onClick={additem}/></div>
+     </>
+    )
+}
+
+export default Expenses;
+
